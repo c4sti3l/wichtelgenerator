@@ -6,7 +6,7 @@ export function getFirstErrorFromResponse(error) {
             errorMessage = Array.isArray(errorFormatted[i]) ? errorFormatted[i][0] : 'Error';
             break;
         }
-    } else if(typeof errorFormatted === 'string') {
+    } else if (typeof errorFormatted === 'string') {
         errorMessage = errorFormatted;
     }
     return errorMessage;
@@ -70,16 +70,16 @@ export function prepareQuery(args) {
             let comparison = filters[key].hasOwnProperty('comparison') ? filters[key].comparison : '=';
             let values = Array.isArray(filters[key].value) ? filters[key].value : [filters[key].value];
             let cleanValues = [];
-            for(let i in values) {
-                if('object' === (typeof values[i])) {
-                    if(values[i].hasOwnProperty('id')) {
+            for (let i in values) {
+                if ('object' === (typeof values[i])) {
+                    if (values[i].hasOwnProperty('id')) {
                         cleanValues.push(values[i].id);
                     }
                 } else {
                     cleanValues.push(values[i]);
                 }
             }
-            if(cleanValues.length > 0) {
+            if (cleanValues.length > 0) {
                 params['filters[' + key + ']'] = key + ';' + comparison + ';' + cleanValues.join('|');
             }
         }

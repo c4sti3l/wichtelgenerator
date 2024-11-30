@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\UserController;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/sanctum/token', TokenController::class);
+Route::get('participants/getAssignee/{token}', [ParticipantController::class, 'getAssignee']);
 
 Route::middleware(['auth:sanctum', 'apply_locale'])->group(function () {
 
@@ -31,6 +33,8 @@ Route::middleware(['auth:sanctum', 'apply_locale'])->group(function () {
      */
     Route::put('/users/{user}/avatar', [UserController::class, 'updateAvatar']);
     Route::resource('users', UserController::class);
+    Route::resource('participants', ParticipantController::class);
+    Route::post('participants/reset', [ParticipantController::class, 'reset']);
 
     /**
      * Roles

@@ -15,3 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('{path}', SpaController::class)->where('path', '(.*)');
+
+Route::get("admin", function () {
+    dd("admin)");
+});

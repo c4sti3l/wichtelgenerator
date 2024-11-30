@@ -142,6 +142,14 @@ export default {
                     to: '/panel/dashboard',
                 },
                 {
+                    name: trans('global.pages.participants'),
+                    icon: 'users',
+                    showDesktop: true,
+                    showMobile: true,
+                    requiresAbility: false,
+                    to: '/panel/participants',
+                },
+                {
                     name: trans('global.pages.users'),
                     icon: 'users',
                     showDesktop: true,

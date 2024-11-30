@@ -21,13 +21,13 @@ router.beforeEach(async (to, from, next) => {
     }
     if (!authStore.user) {
         authStore.clearBrowserData();
-        if(requiresAuth) {
+        if (requiresAuth) {
             next({name: 'login'})
         }
     }
 
-    if(to?.meta?.isPublicAuthPage && authStore.user) {
-        next({name: 'dashboard'})
+    if (to?.meta?.isPublicAuthPage && authStore.user) {
+        next({name: 'home'})
         return;
     }
 

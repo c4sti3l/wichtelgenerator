@@ -10,6 +10,10 @@ import {default as PageProfile} from "@/views/pages/private/profile/Main";
 import {default as PageUsers} from "@/views/pages/private/users/Index";
 import {default as PageUsersCreate} from "@/views/pages/private/users/Create";
 import {default as PageUsersEdit} from "@/views/pages/private/users/Edit";
+import {default as PageParticipants} from "@/views/pages/private/participants/Index";
+import {default as PageParticipantsCreate} from "@/views/pages/private/participants/Create";
+import {default as PageParticipantsEdit} from "@/views/pages/private/participants/Edit";
+import {default as PageLanding} from "@/views/pages/Landing";
 
 import abilities from "@/stub/abilities";
 
@@ -17,13 +21,80 @@ const routes = [
     {
         name: "home",
         path: "/",
+        meta: {requiresAuth: false},
+        component: PageLanding,
+    },
+    {
+        name: "open",
+        path: "/:token",
+        meta: {requiresAuth: false},
+        component: PageLanding,
+    },
+    {
+        name: "admin",
+        path: "/admin",
+        meta: {requiresAuth: true},
+        component: PageLogin,
+    },
+    {
+        path: "/login",
+        name: "login",
         meta: {requiresAuth: false, isPublicAuthPage: true},
         component: PageLogin,
+    },
+    {
+        path: "/register",
+        name: "register",
+        meta: {requiresAuth: false},
+        component: PageRegister,
+    },
+    {
+        path: "/reset-password",
+        name: "resetPassword",
+        meta: {requiresAuth: false, isPublicAuthPage: true},
+        component: PageResetPassword,
+    },
+    {
+        path: "/forgot-password",
+        name: "forgotPassword",
+        meta: {requiresAuth: false, isPublicAuthPage: true},
+        component: PageForgotPassword,
+    },
+    {
+        path: "/:catchAll(.*)",
+        name: "notFound",
+        meta: {requiresAuth: false},
+        component: PageNotFound,
     },
     {
         name: "panel",
         path: "/panel",
         children: [
+            {
+                name: "participants",
+                path: "participants",
+                meta: {requiresAuth: true},
+                children: [
+                    {
+                        name: "participants.list",
+                        path: "",
+                        meta: {requiresAuth: true},
+                        component: PageParticipants,
+                    },
+                    {
+                        name: "participants.create",
+                        path: "create",
+                        meta: {requiresAuth: true},
+                        component: PageParticipantsCreate,
+                    },
+                    {
+                        name: "participants.edit",
+                        path: ":id/edit",
+                        meta: {requiresAuth: true},
+                        component: PageParticipantsEdit,
+                    },
+                ]
+            },
             {
                 name: "dashboard",
                 path: "dashboard",
@@ -60,36 +131,6 @@ const routes = [
                 ]
             },
         ]
-    },
-    {
-        path: "/login",
-        name: "login",
-        meta: {requiresAuth: false, isPublicAuthPage: true},
-        component: PageLogin,
-    },
-    {
-        path: "/register",
-        name: "register",
-        meta: {requiresAuth: false, isPublicAuthPage: true},
-        component: PageRegister,
-    },
-    {
-        path: "/reset-password",
-        name: "resetPassword",
-        meta: {requiresAuth: false, isPublicAuthPage: true},
-        component: PageResetPassword,
-    },
-    {
-        path: "/forgot-password",
-        name: "forgotPassword",
-        meta: {requiresAuth: false, isPublicAuthPage: true},
-        component: PageForgotPassword,
-    },
-    {
-        path: "/:catchAll(.*)",
-        name: "notFound",
-        meta: {requiresAuth: false},
-        component: PageNotFound,
     },
 ]
 

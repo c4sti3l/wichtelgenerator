@@ -10,7 +10,12 @@ return [
     | The following language lines are used for the front-end application.
     |
     */
-
+    'participants' => [
+        'labels' => [
+            'count' => 'Counts',
+            'phone' => 'Phone'
+        ],
+    ],
     'users' => [
         'status' => [
             'verified' => 'Verified',
@@ -60,6 +65,9 @@ return [
             'logout' => 'Logout',
             'forgot_password' => 'Forgot Password',
             'reset_password' => 'Reset Password',
+            'participants' => 'Participants',
+            'participants_create' => 'New Participant',
+            'participants_edit' => 'Edit Participant'
         ],
         'phrases' => [
             'clear_filters' => 'Clear all',
@@ -116,6 +124,7 @@ return [
             'upload' => 'Upload',
             'update' => 'Update',
             'change_avatar' => 'Change Avatar',
+            'reset' => 'Reset'
         ],
         'actions' => [
             'name' => 'Actions',
