@@ -1,0 +1,82 @@
+name: Build and Deploy Laravel + Vue3
+
+on:
+  push:
+    branches:
+      - master  # Passe den Branch an, der den Workflow auslösen soll
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18  # Passe die Node.js-Version an, die dein Projekt benötigt
+
+      - name: Install NPM dependencies
+        run: npm install
+
+      - name: Build Vue3 Application
+        run: npm run build
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'  # Passe die PHP-Version an, die dein Projekt benötigt
+          extensions: mbstring, bcmath
+          ini-values: post_max_size=256M, max_execution_time=300
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Prepare Deployment Files
+        run: |
+          cp -R dist public
+          echo "Files ready for deployment"
+
+      - name: Archive Build Files
+        run: zip -r build.zip public vendor .env
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build.zip
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Deploy to Server
+        uses: appleboy/scp-action@v0.2.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: build.zip
+          target: /www/htdocs/w01ba8a0/wichtelgenerator
+
+      - name: SSH to Extract and Finalize
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /www/htdocs/w01ba8a0/wichtelgenerator
+            unzip -o build.zip
+            php artisan migrate --force
+            php artisan config:cache
+            php artisan route:cache
