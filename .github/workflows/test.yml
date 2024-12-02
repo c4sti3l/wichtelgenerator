@@ -1,12 +1,12 @@
-name: Create test.txt
+name: Deploy test.txt via SCP
 
 on:
   push:
     branches:
-      - master  # Trigger auf Änderungen in der main branch
+      - master  # Trigger bei Push auf den main-Branch
 
 jobs:
-  create-file:
+  deploy:
     runs-on: ubuntu-latest  # Arbeitet auf einem Ubuntu-Linux-Runner
 
     steps:
@@ -15,10 +15,14 @@ jobs:
 
       - name: Create test.txt
         run: |
-          echo "Dies ist eine Testdatei" > test.txt  # Erstellt die Datei test.txt mit Textinhalt
+          echo "Dies ist eine Testdatei" > test.txt  # Erstellt die Datei test.txt mit Inhalt
 
-      - name: Upload test.txt as artifact
-        uses: actions/upload-artifact@v3  # Lädt die Datei als Artefakt hoch
+      - name: Copy test.txt to server via SCP
+        uses: appleboy/scp-action@v0.1.0  # Nutzt die SCP-Action für den Transfer
         with:
-          name: test-file
-          path: test.txt  # Pfad zur erstellten Datei
+          host: ${{ secrets.SERVER_HOST }}  # Der Server-Host (z.B. IP-Adresse oder Domainname)
+          username: ${{ secrets.SERVER_USER }}  # Der SSH-Benutzername
+          key: ${{ secrets.SERVER_SSH_KEY }}  # Der SSH-Schlüssel als Secret gespeichert
+          port: 22  # Der SSH-Port (Standard ist 22)
+          source: "test.txt"  # Die Quelle der Datei, die kopiert wird
+          target: "/www/htdocs/w01ba8a0/wichtelgenerator"  # Zielverzeichnis auf dem Server
