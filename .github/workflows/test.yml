@@ -3,14 +3,14 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - master  # Trigger bei Push auf den main-Branch
+      - main  # Trigger, wenn auf den main Branch gepusht wird
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checkout des Repositories
+    # 1. Checkout des Codes
     - name: Checkout code
       uses: actions/checkout@v2
 
@@ -22,18 +22,23 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
-    # 3. Teste die SSH-Verbindung (optional, aber hilft bei der Fehlerbehebung)
+    # 3. Teste die SSH-Verbindung
     - name: Test SSH connection
       run: |
         ssh -i ~/.ssh/id_rsa -v ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "echo 'SSH connection successful'"
 
-    # 4. Erstelle die test.txt Datei (nur zu Testzwecken, du kannst dies durch die eigentliche Datei ersetzen)
+    # 4. Erstelle die test.txt Datei (zu Testzwecken)
     - name: Create test.txt file
       run: echo "This is a test file" > test.txt
 
-    # 5. Kopiere die Datei via SCP auf den Server
+    # 5. Sicherstellen, dass das Zielverzeichnis existiert und schreibbar ist
+    - name: Ensure target directory exists
+      run: |
+        ssh -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "mkdir -p /www/htdocs/w01ba8a0/wichtelgenerator"
+
+    # 6. Kopiere test.txt per SCP auf den Server
     - name: Copy test.txt to server via SCP
-      uses: appleboy/scp-action@v0.1.0
+      uses: appleboy/scp-action@v0.1.1  # Neuere Version verwenden
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
@@ -42,4 +47,3 @@ jobs:
         source: "test.txt"
         target: "/www/htdocs/w01ba8a0/wichtelgenerator"
         debug: true  # Aktiviert Debugging für genauere Fehlerausgaben
-
