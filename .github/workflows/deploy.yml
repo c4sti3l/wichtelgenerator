@@ -35,13 +35,9 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-dev --optimize-autoloader
 
-#      - name: Prepare Deployment Files
-#        run: |
-#          cp -R p public
-#          echo "Files ready for deployment"
-
+      # Archivierung erweitern, um alle erforderlichen Dateien hinzuzufügen
       - name: Archive Build Files
-        run: zip -r build.zip public vendor .env
+        run: zip -r build.zip public vendor .env app database config routes storage resources package.json composer.json
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
