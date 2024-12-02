@@ -20,7 +20,7 @@ class ParticipantResource extends JsonResource {
 
         $data = $this->resource->toArray();
         $data['chosen_by_decrypt'] = $p->decryptString($data['chosen_by']);
-        $data['count'] = $data['count'] === 0 ? 0 : ($data['count'] / 2);
+//        $data['count'] = $data['count'] === 0 ? 0 : ($data['count'] / 2);
 
         return $data;
     }
