@@ -3,7 +3,7 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main  # Trigger, wenn auf den main Branch gepusht wird
+      - master  # Trigger, wenn auf den main Branch gepusht wird
 
 jobs:
   deploy:
