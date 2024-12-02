@@ -1,0 +1,24 @@
+name: Create test.txt
+
+on:
+  push:
+    branches:
+      - master  # Trigger auf Änderungen in der main branch
+
+jobs:
+  create-file:
+    runs-on: ubuntu-latest  # Arbeitet auf einem Ubuntu-Linux-Runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Checkt das Repository aus
+
+      - name: Create test.txt
+        run: |
+          echo "Dies ist eine Testdatei" > test.txt  # Erstellt die Datei test.txt mit Textinhalt
+
+      - name: Upload test.txt as artifact
+        uses: actions/upload-artifact@v3  # Lädt die Datei als Artefakt hoch
+        with:
+          name: test-file
+          path: test.txt  # Pfad zur erstellten Datei
