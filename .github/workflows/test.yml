@@ -1,4 +1,4 @@
-name: Deploy test.txt via SCP
+name: Deploy to Server
 
 on:
   push:
@@ -7,22 +7,39 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Arbeitet auf einem Ubuntu-Linux-Runner
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2  # Checkt das Repository aus
+    # 1. Checkout des Repositories
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Create test.txt
-        run: |
-          echo "Dies ist eine Testdatei" > test.txt  # Erstellt die Datei test.txt mit Inhalt
+    # 2. Setze den SSH-Schlüssel und konfiguriere den SSH-Zugang
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Copy test.txt to server via SCP
-        uses: appleboy/scp-action@v0.1.0  # Nutzt die SCP-Action für den Transfer
-        with:
-          host: ${{ secrets.SERVER_HOST }}  # Der Server-Host (z.B. IP-Adresse oder Domainname)
-          username: ${{ secrets.SERVER_USER }}  # Der SSH-Benutzername
-          key: ${{ secrets.SERVER_SSH_KEY }}  # Der SSH-Schlüssel als Secret gespeichert
-          port: 22  # Der SSH-Port (Standard ist 22)
-          source: "test.txt"  # Die Quelle der Datei, die kopiert wird
-          target: "/www/htdocs/w01ba8a0/wichtelgenerator"  # Zielverzeichnis auf dem Server
+    # 3. Teste die SSH-Verbindung (optional, aber hilft bei der Fehlerbehebung)
+    - name: Test SSH connection
+      run: |
+        ssh -i ~/.ssh/id_rsa -v ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "echo 'SSH connection successful'"
+
+    # 4. Erstelle die test.txt Datei (nur zu Testzwecken, du kannst dies durch die eigentliche Datei ersetzen)
+    - name: Create test.txt file
+      run: echo "This is a test file" > test.txt
+
+    # 5. Kopiere die Datei via SCP auf den Server
+    - name: Copy test.txt to server via SCP
+      uses: appleboy/scp-action@v0.1.0
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: 22
+        source: "test.txt"
+        target: "/www/htdocs/w01ba8a0/wichtelgenerator"
+        debug: true  # Aktiviert Debugging für genauere Fehlerausgaben
+
