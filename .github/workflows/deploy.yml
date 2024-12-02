@@ -36,8 +36,9 @@ jobs:
         run: composer install --no-dev --optimize-autoloader
 
       # Archivierung erweitern, um alle erforderlichen Dateien hinzuzufügen
-      - name: Archive Build Files
-        run: zip -r build.zip public vendor .env app database config routes storage resources package.json composer.json
+      - name: Archive All Files
+        run: zip -r build.zip . -x "*.git*"  # Fügt alles hinzu, außer der .git-Verzeichnisse
+
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
