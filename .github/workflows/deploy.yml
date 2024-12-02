@@ -35,10 +35,10 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-dev --optimize-autoloader
 
-      - name: Prepare Deployment Files
-        run: |
-          cp -R dist public
-          echo "Files ready for deployment"
+#      - name: Prepare Deployment Files
+#        run: |
+#          cp -R p public
+#          echo "Files ready for deployment"
 
       - name: Archive Build Files
         run: zip -r build.zip public vendor .env
@@ -60,7 +60,7 @@ jobs:
           name: build
 
       - name: Deploy to Server
-        uses: appleboy/scp-action@v0.2.0
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
@@ -69,7 +69,7 @@ jobs:
           target: /www/htdocs/w01ba8a0/wichtelgenerator
 
       - name: SSH to Extract and Finalize
-        uses: appleboy/ssh-action@v0.1.4
+        uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
