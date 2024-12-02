@@ -1,9 +1,9 @@
 name: Build and Deploy Laravel + Vue3
 
-#on:
-#  push:
-#    branches:
-#      - master  # Passe den Branch an, der den Workflow auslösen soll
+on:
+  push:
+    branches:
+      - master  # Passe den Branch an, der den Workflow auslösen soll
 
 jobs:
   build:
