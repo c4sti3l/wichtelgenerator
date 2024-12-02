@@ -41,5 +41,8 @@ export default defineConfig({
             '@': path.resolve(__dirname, './resources/app'),
         },
         extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue', '.mjs']
+    },
+    build: {
+        outDir: 'dist',
     }
 });
